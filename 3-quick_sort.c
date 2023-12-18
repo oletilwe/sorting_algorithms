@@ -1,4 +1,5 @@
 #include "sort.h"
+#include <stdbool.h>
 
 void swap_ints(int *a, int *b);
 int lomuto_partition(int *array, size_t size, int left, int right);
@@ -31,29 +32,29 @@ void swap_ints(int *a, int *b)
  */
 int lomuto_partition(int *array, size_t size, int left, int right)
 {
-	int *driver, up, down;
+	int *pivot, above, below;
 
-	driver = array + right;
-	for (up = down = left; down < right; down++)
+	pivot = array + right;
+	for (above = below = left; below < right; below++)
 	{
-		if (array[down] < *driver)
+		if (array[below] < *pivot)
 		{
-			if (up < down)
+			if (above < below)
 			{
-				swap_ints(array + down, array + up);
+				swap_ints(array + below, array + above);
 				print_array(array, size);
 			}
-			up++;
+			above++;
 		}
 	}
 
-	if (array[up] > *driver)
+	if (array[above] > *pivot)
 	{
-		swap_ints(array + up, driver);
+		swap_ints(array + above, pivot);
 		print_array(array, size);
 	}
 
-	return (up);
+	return (above);
 }
 
 /**
@@ -67,13 +68,13 @@ int lomuto_partition(int *array, size_t size, int left, int right)
  */
 void lomuto_sort(int *array, size_t size, int left, int right)
 {
-	int belong;
+	int part;
 
 	if (right - left > 0)
 	{
-		belong = lomuto_partition(array, size, left, right);
-		lomuto_sort(array, size, left, belong - 1);
-		lomuto_sort(array, size, belong + 1, right);
+		part = lomuto_partition(array, size, left, right);
+		lomuto_sort(array, size, left, part - 1);
+		lomuto_sort(array, size, part + 1, right);
 	}
 }
 
@@ -93,4 +94,3 @@ void quick_sort(int *array, size_t size)
 
 	lomuto_sort(array, size, 0, size - 1);
 }
-
